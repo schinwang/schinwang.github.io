@@ -1,0 +1,49 @@
+{% if page.bg %}
+  <aside class="sidebar" role="note" style="background-image: url({{ site.url }}{{ site.images }}/{{ page.bg }})">
+{% else %}
+  <aside class="sidebar" role="note" style="background-image: url({{ site.url }}{{ site.images }}/bg.svg)">
+{% endif %}
+
+  <div class="cover">
+
+    <div class="cover-text">
+      <div class="heading">
+
+        {% if page.tags %}
+          {% for tag in page.tags %}
+            <a href="/posts/#{{ tag | downcase }}">{{ tag | downcase }}</a>
+          {% endfor %}
+        {% else %}
+          {{ page.title }}
+        {% endif %}
+
+      </div>
+
+      <p>
+        {% if page.summary %}
+          {{ page.summary }}
+        {% endif %}
+      </p>
+
+    </div>
+
+    <div class="footer-col footer-col-2">
+      <!--ul class="social-media-list">
+        {% if site.github_username %}
+        <li>
+          {% include icon-github.html username=site.github_username %}
+        </li>
+        {% endif %}
+
+        {% if site.twitter_username %}
+        <li>
+          {% include icon-twitter.html username=site.twitter_username %}
+        </li>
+        {% endif %}
+      </ul-->
+    </div>
+
+  </div>
+
+  <div id="switcher"></div>
+</aside>
