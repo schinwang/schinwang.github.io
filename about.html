@@ -10,11 +10,17 @@ active: about
 
 <p>HI,</p>
 
-<p>   It's a site based on <a href='https://help.github.com/categories/github-pages-basics/'>github pages</a> and <a href='http://jekyllrb.com/'>jekyll</a> with the theme <a href='http://jekyllthemes.org/themes/voyager/'>Voyager</a>
+<p>   It's a site based on <a href='https://help.github.com/categories/github-pages-basics/'>github pages</a> and <a href='http://jekyllrb.com/'>jekyll</a>'s theme <a href='http://jekyllthemes.org/themes/voyager/'>Voyager</a>
 </p>
 
 <p>   Any questions please contact me </p>
       <ul class="social-media-list">
+        {% if site.email %}
+        <li>
+          {% include icon-mail.html mail=site.email %}
+        </li>
+        {% endif %} 
+
         {% if site.github_username %}
         <li>
           {% include icon-github.html username=site.github_username %}
@@ -27,10 +33,5 @@ active: about
         </li>
         {% endif %}
         
-        {% if site.email %}
-        <li>
-          {% include icon-mail.html mail=site.email %}
-        </li>
-        {% endif %} 
       </ul>
 
