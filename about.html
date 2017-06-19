@@ -8,30 +8,33 @@ summary: ""
 active: about
 ---
 
-<p>HI,</p>
+<h4>Hello</h4>
 
-<p>   It's a site based on <a href='https://help.github.com/categories/github-pages-basics/'>github pages</a> and <a href='http://jekyllrb.com/'>jekyll</a>'s theme <a href='http://jekyllthemes.org/themes/voyager/'>Voyager</a>
+<p>I'm chason, and built this blog site based on <a href='https://help.github.com/categories/github-pages-basics/'>github pages</a> and <a href='http://jekyllrb.com/'>jekyll</a>'s theme <a href='http://jekyllthemes.org/themes/voyager/'>Voyager</a>
 </p>
+<h4>About Me</h4>
+<p>I'm now an ops/PE in an internet company. I learned a lot in the current job and I think blog can help me review the cases I met, so here it comes. Also I share things happen in my life as long as it deserves. Hope you can enjoy it O(∩_∩)O！</p>
 
-<p>   Any questions please contact me </p>
-      <ul class="social-media-list">
-        {% if site.email %}
-        <li>
-          {% include icon-mail.html mail=site.email %}
-        </li>
-        {% endif %} 
+<h4>Any questions</h4>
+<p> please contact me </p>
+<ul class="social-media-list">
+  {% if site.email %}
+  <li>
+    {% include icon-mail.html mail=site.email %}
+  </li>
+  {% endif %} 
 
-        {% if site.github_username %}
-        <li>
-          {% include icon-github.html username=site.github_username %}
-        </li>
-        {% endif %}
+  {% if site.github_username %}
+  <li>
+    {% include icon-github.html username=site.github_username %}
+  </li>
+  {% endif %}
 
-        {% if site.twitter_username %}
-        <li>
-          {% include icon-twitter.html username=site.twitter_username %}
-        </li>
-        {% endif %}
-        
-      </ul>
+  {% if site.twitter_username %}
+  <li>
+    {% include icon-twitter.html username=site.twitter_username %}
+  </li>
+  {% endif %}
+  
+</ul>
 

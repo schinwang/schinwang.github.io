@@ -26,6 +26,7 @@ github_username:  schinwang
 markdown: kramdown
 relative_permalinks: false
 permalink: /:categories/:title/
+#highlighter: rouge
 
 # Posts settings
 future: true
