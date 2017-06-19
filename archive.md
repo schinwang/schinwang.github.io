@@ -1,7 +1,7 @@
 ---
 bg: "flower.jpeg"
 layout: page
-permalink: /posts/
+permalink: /archive
 title: "Archive"
 crawlertitle: "All articles"
 #summary: "Posts about jekyll"
