@@ -27,6 +27,7 @@ markdown: kramdown
 relative_permalinks: false
 permalink: /:categories/:title/
 #highlighter: rouge
+paginate: 5
 
 # Posts settings
 future: true
