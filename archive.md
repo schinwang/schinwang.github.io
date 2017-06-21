@@ -1,5 +1,5 @@
 ---
-bg: "flower.jpeg"
+bg: "bookmark.jpg"
 layout: page
 permalink: /archive
 title: "Archive"

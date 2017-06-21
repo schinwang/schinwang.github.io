@@ -1,5 +1,5 @@
 ---
-bg: "bookmark.jpg"
+bg: "flower.jpeg"
 layout: page
 title: "Books"
 crawlertitle: "some docs"
