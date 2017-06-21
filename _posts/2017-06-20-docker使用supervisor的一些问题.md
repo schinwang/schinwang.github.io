@@ -124,7 +124,7 @@ sudo service rsyslog start
 sudo /etc/init.d/crond start
 /path-to/php/sbin/php-fpm start
 sh /path-to/webserver/loadnginx.sh start
-trap "sh /data/deploy/bfrontapi/webserver/loadnginx.sh stop; exit" TERM
+trap "sh /path-to/webserver/loadnginx.sh stop; exit" TERM
 while true
 do
   sleep 5
