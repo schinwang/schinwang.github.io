@@ -8,7 +8,9 @@ categories: nginx
 author: chason
 ---
 
-`$server_name`
+总结：\$server_name 是一个directive,用来匹配请求的host头，\$http_host与\$host表示请求的host头，区别在于$http_host会带有端口号(非80/443)
+
+`/$server_name`
 
 Server names are defined using the [server_name](http://nginx.org/en/docs/http/ngx_http_core_module.html#server_name) directive and determine which [server](http://nginx.org/en/docs/http/ngx_http_core_module.html#server) block is used for a given request
 
@@ -22,6 +24,9 @@ $host是nginx配置文件中的一个变量，其值按如下顺序来确定，�
 
 `$http_host`
 
-nginx官方并没有对其的解释，但之前在用nginx做代理的时候，直接proxy_pass到目标网址会返回400，发现是因为$host的值为*.xxx.com(取了server_name?), 于是proxy_set_header host \$http_host 临时来解决
+nginx官方并没有对其的解释, 不过测试发现\$host 与 \$http_host的区别在于当使用非80/443端口的时候，\$http_host  =  \$host:$port
 
-至于原因，暂未有深入了解，原谅我的囫囵吞枣O(∩_∩)O~
+另外在做反向代理的时候，RS（real server)有时需要知道请求的host头，此时需要用proxy_set_header host $host; 指令来对转发请求增加一个请求头，否则后端收到的host会是""
+
+END~ 
+O(∩_∩)O~
