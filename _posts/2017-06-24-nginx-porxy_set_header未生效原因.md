@@ -5,7 +5,6 @@ title: "nginx-porxy_set_header未生效原因"
 summary: ""
 tags: ['nginx']
 categories: nginx
-author: chason
 ---
 
 有时候会发现，nginx设置了某个变量，比如增加一个header变量(porxy_set_header)后并未有生效，原因是porxy_set_header的生效与否与其所在的Block有关
