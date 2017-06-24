@@ -4,16 +4,23 @@
 
 preparation:
 
-```shell
-$ sudo yum -y install openssl-devel
+{% highlight shell %}
+
+$ sudo yum -y install openssl-devel wget python-devel
+$ wget https://bootstrap.pypa.io/get-pip.py && sudo python get-pip.py
 $ sudo pip install paramiko PyYAML Jinja2 httplib2 six
-```
 
-http://releases.ansible.com/ansible/下载稳定版
+{% endhighlight %}
 
-```shell
-$ source ./hacking/env-setup
-```
+https://github.com/ansible/ansible下载稳定版
+
+{% highlight shell %}
+
+$ sudo python install.py install
+
+{% endhighlight %}
+
+
 
 
 
