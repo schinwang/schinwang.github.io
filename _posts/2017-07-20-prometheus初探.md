@@ -42,14 +42,16 @@ avg(irate(node_cpu{mode="idle"}[5m])*100)  来获取5min内的平均IDLE值
 再比如，配置一个延时告警，也需要通过在配置文件中通过指令配置
 
 ```shell
+{% raw %}
 # Alert for any instance that have a median request latency >1s.
 ALERT APIHighRequestLatency
   IF api_http_request_latencies_second{quantile="0.5"} > 1
   FOR 1m
   ANNOTATIONS {
-    summary = "High request latency on {{ $labels.instance }}",
-    description = "{{ $labels.instance }} has a median request latency above 1s (current value: {{ $value }}s)",
+    summary = "High request latency on {{ $labels.instance {{",
+    description = "{{ $labels.instance {{ has a median request latency above 1s (current value: {{ $value {{s)",
   }
+{% endraw %}
 ```
 
 由于配置是需要不定期更新的，所以Prometheus支持对配置文件的热加载，通过发送HUP信号给进程即可重新加载配置文件
@@ -117,47 +119,49 @@ targets/php.json
 rules/basic.rule
 
 ```shell
+{% raw %}
 ALERT cpu_idle
   IF avg(irate(node_cpu{mode="idle",job="go-relation"}[5m])*100) < 20
   FOR 1m
   ANNOTATIONS {
-    summary = "{{ $labels.instance }}: cpu使用率超80%, current_$value: {{ $value }}"
+    summary = "{{ $labels.instance {{: cpu使用率超80%, current_$value: {{ $value {{"
   }
 
 ALERT cpu_steal
   IF avg(irate(node_cpu {mode="steal"}[5m])*100) > 10
   FOR 1m
   ANNOTATIONS {
-    summary = "{{ $labels.instance }}: cpu争抢严重, current_$value: {{ $value }}"
+    summary = "{{ $labels.instance {{: cpu争抢严重, current_$value: {{ $value {{"
   }
 
 ALERT iowait
   IF avg(irate(node_cpu{mode="iowait"}[5m])*100) > 20
   FOR 1m
   ANNOTATIONS {
-    summary = "{{ $labels.instance }}: iowait率偏高, current_$value: {{ $value }}"
+    summary = "{{ $labels.instance {{: iowait率偏高, current_$value: {{ $value {{"
   }
 
 ALERT mem_free
   IF (node_memory_MemFree+node_memory_Cached)/node_memory_MemTotal*100 < 20
   FOR 1m
   ANNOTATIONs {
-    summary = "{{$labels.instance}}: 空闲内存占比<20%, current$value:{{$value}}"
+    summary = "{{$labels.instance{{: 空闲内存占比<20%, current$value:{{$value{{"
   }
 
 ALERT sys_disk_usage
   IF node_filesystem_free{mountpoint="/"}/node_filesystem_size{mountpoint="/"}*100 < 20
   FOR 1m
   ANNOTATIONS {
-    summary = "{{ $labels.instance }}: 系统盘使用率超80%, current_$value: {{ $value }}"
+    summary = "{{ $labels.instance {{: 系统盘使用率超80%, current_$value: {{ $value {{"
   }
 
 ALERT data_disk_usage
   IF node_filesystem_free{mountpoint="/data"} / node_filesystem_size{mountpoint="/data"}*100 < 20
   FOR 1m
   ANNOTATIONS {
-    summary = "{{ $labels.instance }}: 数据盘使用率超80%, current_$value: {{ $value }}"
+    summary = "{{ $labels.instance {{: 数据盘使用率超80%, current_$value: {{ $value {{"
   }
+{% endraw %}
 ```
 
 ##### 4.2 alertmanager 配置
