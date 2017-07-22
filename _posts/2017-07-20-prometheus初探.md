@@ -7,11 +7,9 @@ tags: ['monitor']
 categories: monitor
 ---
 
-#### 1 简介
-
 Prometheus监控系统是类似于[Google Borgmon](http://flacro.me/google-borgmon/)的一个开源监控系统，使用go语言实现. Prometheus是一个白盒监控系统，监控Server采用pull方式，通过对监控模块发起HTTP请求获取应用内部的服务状态(如请求数，状态，goroutine等)，同时提供了一个push_gateway模块满足对定时任务(或批处理任务，一般为非连续性的) 的监控数据采集.
 
-#### 2 模块
+#### 1 模块
 
 Prometheus系统包括几个主要模块:
 
@@ -30,7 +28,7 @@ Prometheus系统包括几个主要模块:
 
 - **node_exporter**是基础监控模块，采集cpu/disk/mem/io等信息
 
-#### 3 使用
+#### 2 使用
 
 Prometheus的使用门槛在于其配置和自己的查询语言
 比如，查询cpu idle，node_exporter中并不是易于理解的百分比数值，需要通过
@@ -56,7 +54,7 @@ ALERT APIHighRequestLatency
 
 由于配置是需要不定期更新的，所以Prometheus支持对配置文件的热加载，通过发送HUP信号给进程即可重新加载配置文件
 
-#### 4 配置文件示例
+#### 3 配置文件示例
 
 ##### 4.1 Prometheus配置
 
