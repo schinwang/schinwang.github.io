@@ -27,7 +27,7 @@ markdown: kramdown
 relative_permalinks: false
 permalink: /:categories/:title/
 #highlighter: rouge
-plugins: [jekyll-paginate]
+plugins_dir: [jekyll-paginate]
 paginate: 5
 
 
