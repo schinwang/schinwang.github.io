@@ -62,7 +62,7 @@ unix:///var/tmp/supervisor.sock refused
 
 {% endhighlight %}
 
-的错误，这是一个关于[overlayfs](https://github.com/Supervisor/supervisor/issues/654)的问题，可以在容器中启动的时候添加
+的错误，这是一个关于[overlayfs](https://github.com/Supervisor/supervisor/issues/654)的问题([So long as that volume's underlying filesystem is 'normal' for linux and will permit the creation of working sockets](https://github.com/analytically/docker-overlayfs-bug))When using device mapper, it works fine.可以在容器中启动的时候添加
 
 {% highlight shell %}
 --tmpfs /var/tmp/
