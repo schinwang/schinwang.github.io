@@ -1,7 +1,7 @@
 ---
-bg: "tree.jpeg"
+bg: "tools.jpg"
 layout: post
-title: "2017-08-20-HTTP: 413 Request Entity Too Large"
+title: "HTTP: 413 Request Entity Too Large"
 summary: ""
 tags: ['nginx']
 categories: nginx
