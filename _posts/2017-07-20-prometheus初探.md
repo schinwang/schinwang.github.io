@@ -1,10 +1,10 @@
 ---
-bg: "tools.jpg"
+bg: "superman.jpg"
 layout: post
 title: "prometheus初探"
 summary: ""
-tags: ['monitor']
-categories: monitor
+tags: ['ops']
+categories: ops
 ---
 
 [1 模块](#module)
