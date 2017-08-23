@@ -26,11 +26,11 @@ Prometheus监控系统是类似于[Google Borgmon](http://flacro.me/google-borgm
 Prometheus系统包括几个主要模块:
 
 - **prometheus**本身是一个server模块，负责监控指标配置，监控数据收集，告警规则设置，server本身提供了一个UI界面，可以查看相关的配置及监控指标数据
-  ![prometheus](/assets/images/posts/0720/prometheus.png)
+  ![prometheus](/assets/images/posts/20170720/prometheus.png)
 
 - **[grafana](https://grafana.com/*)**是一个开源的指标量监测和可视化工具. 对Prometheus查询语言做了接入兼容, 可以对监控指标做友好展示
 
-  ![grafana](/assets/images/posts/0720/grafana.png)
+  ![grafana](/assets/images/posts/20170720/grafana.png)
 
 - **alertmanager**模块是一个独立的告警模块，通过配置告警人, 告警分组, 告警方式可以按照不同的规则发送给不同的模块负责人，alertmanager支持email, slack，等告警方式, 也可以通过webhook接入钉钉等国内IM工具.
 

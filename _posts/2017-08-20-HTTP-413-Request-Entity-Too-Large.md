@@ -63,8 +63,9 @@ php一般是通过fpm reload，可以通过发送USR2信号量来重新加载配
 
 controlling nginx
 
-| TERM, INT | fast shutdown                            |
+| Signal    |                                          |
 | --------- | ---------------------------------------- |
+| TERM, INT | fast shutdown                            |
 | QUIT      | graceful shutdown                        |
 | HUP       | changing configuration, keeping up with a changed time zone (only for FreeBSD and Linux), starting new worker processes with a new configuration, graceful shutdown of old worker processes |
 | USR1      | re-opening log files                     |
@@ -73,8 +74,9 @@ controlling nginx
 
 controlling php-fpm
 
-| TERM, INT | fast shutdown                    |
+| Signal    |                                  |
 | --------- | -------------------------------- |
+| TERM, INT | fast shutdown                    |
 | QUIT      | graceful shutdown                |
 | USR1      | re-opening log files             |
 | USR2      | Reload service php-fpm           |
