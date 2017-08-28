@@ -11,9 +11,13 @@ categories: ops
 
 ​        最近团队引入了golang的zap框架(uber开源)，没有对日志做解决方案，所以只能借助logrotate的copytruncate功能实现日志切割
 
-[TOC]
+[基本配置](#config_example)
 
-#####基本配置
+[常见问题](#common_problems)
+
+[帮助手册](#man)
+
+##### 基本配置 {#config_example}
 
 基本的日志切割配置如下
 
@@ -62,9 +66,7 @@ done
 
 logrotate日志切分时，默认的后缀是.[1-9], 也可以用dateext生成以日期结尾的切割日志，当然因为没有小时，所以还是要用postrotate.sh加上小时
 
-
-
-##### 常见问题
+##### 常见问题 {#common_problems}
 
 - 如果目标日志文件是root
   logrotate配置文件can be root or nonroot， 但必须通过sudo或以root账户来执行logrotate
@@ -90,4 +92,4 @@ logrotate日志切分时，默认的后缀是.[1-9], 也可以用dateext生成�
 
 综上，对于copytruncate模式的logrotate，将logrotate配置文件置为root归属，然后用sudo命令或root账户执行，可以避免很多问题
 
-#####[附:logrotate帮助手册](https://linux.die.net/man/8/logrotate)			
+##### [附:logrotate帮助手册](https://linux.die.net/man/8/logrotate) {#man}
