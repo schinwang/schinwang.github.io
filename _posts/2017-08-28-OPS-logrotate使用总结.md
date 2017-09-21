@@ -1,7 +1,7 @@
 ---
 bg: "superman.jpg"
 layout: post
-title: "logrotate 使用总结"
+title: "ops-logrotate使用总结"
 summary: ""
 tags: ['ops']
 categories: ops
@@ -22,7 +22,8 @@ categories: ops
 基本的日志切割配置如下
 
 ```shell
-/data/logs/module/*.log {
+/data/log/*/*.log {
+    #if the logs' owner/group not root:root, need su directive to specify the owner/group'
     copytruncate
     missingok
     notifempty
@@ -30,11 +31,10 @@ categories: ops
     maxage 10
     sharedscripts
     postrotate
-        bash  /data/op_cron_jobs/logrotate_scripts/postrotate.sh /data/logs/module/ > /dev/null
+        bash  /data/op_cron_jobs/logrotate_scripts/postrotate.sh /data/log > /dev/null
     endscript
 }
-
-/data/logs/worker/stdout.log {
+/path/to/worker/stdout.log {
     su work work
     copytruncate
     missingok
@@ -43,25 +43,50 @@ categories: ops
     notifempty
     nocompress
     postrotate
-        bash /data/op_cron_jobs/logrotate_scripts/postrotate.sh /data/logs/worker/ "\."`date +"%Y%m%d"`
+        bash /data/op_cron_jobs/logrotate_scripts/postrotate.sh /path/to/worker/ "\."`date +"%Y%m%d"`
     endscript
 }
 ```
 
-因为logrotate默认是按天切割的，按小时切割的话，我们都希望切割后的日志名称能按时间戳来区分，所以用postrotate.sh完成文件的重命名
+因为logrotate默认是按天切割的，按小时切割的话，我们都希望切割后的日志名称能按时间戳来区分，所以用postrotate.sh完成文件的重命名，同时按天做了文件夹归档
 
 ```shell
 post_fix="\.1"
 if [ $#'' == '2' ]
 then
-  post_fix=$2
+    post_fix=$2
 fi
 
-ls $1 |grep -E "$post_fix" |while read log
-do
-  new_log_name=$1"/"${log%%.*}"_log_"`date -d "-1 hour" +"%Y%m%d%H"`
-  mv $1"/"$log $new_log_name
-done
+archive() {
+    if [ -d $1 ]
+    then
+    	#这里需要-1小时，避免每天23点的日志放到第二天的文件夹里
+        today=`date -d "-1 hour" +%Y%m%d`
+        archive_path=$1
+        archive_dir=${today}_rotate
+        test -d ${archive_path}/${archive_dir} || (mkdir -p ${archive_path}/${archive_dir} && chown -R work:work ${archive_path}/${archive_dir})
+        ls $archive_path |grep -E "${post_fix}$" |while read log
+        do
+            new_log_name=${archive_path}/${archive_dir}/${log%%.*}"_log_"`date -d "-1 hour" +"%Y%m%d%H"`
+            mv ${archive_path}/${log} ${new_log_name}
+            find $archive_path -name "*_rotate" -mtime +14 -exec rm -rf {} \;
+        done
+    fi
+}
+
+path=$1
+#首先确认是否有子文件夹（对应上面的/data/log/*/*.log），并对子文件夹遍历
+is_here=`ls $path|grep -E "${post_fix}$"|wc -l`
+if [ $is_here"" == "0" ]
+then
+    ls $path | while read subdir
+    do
+        echo $subdir
+        archive ${path}/${subdir##*/}
+    done
+else
+    archive $path
+fi
 ```
 
 logrotate日志切分时，默认的后缀是.[1-9], 也可以用dateext生成以日期结尾的切割日志，当然因为没有小时，所以还是要用postrotate.sh加上小时
@@ -89,6 +114,9 @@ logrotate日志切分时，默认的后缀是.[1-9], 也可以用dateext生成�
   ```shell
   error: skipping "/home/work/test/mate/clean.log" because parent directory has insecure permissions (It's world writable or writable by group which is not "root") Set "su" directive in config file to tell logrotate which user/group should be used for rotation.
   ```
+
+- logrotate调试
+  logrotate的-d命令会详细的给出执行过程，对于调试很有帮助
 
 综上，对于copytruncate模式的logrotate，将logrotate配置文件置为root归属，然后用sudo命令或root账户执行，可以避免很多问题
 
