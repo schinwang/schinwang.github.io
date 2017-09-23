@@ -64,25 +64,69 @@ location /supervisor/stylesheets/ {
 
 ```nginx
 location /debug/pprof/ {
-        set $query_uri "";
-        if ($request_uri ~* "/debug/pprof/(.*)") {
-            set $query_uri $1;
-        }
-        set $upstreamhost "";
-        rewrite_by_lua_block {
-            ngx.var.upstreamhost = string.match(ngx.var.query_uri,"%d+.%d+.%d+.%d+:%d+")
-            if ngx.var.upstreamhost == nil then
-                ngx.var.upstreamhost = string.match(ngx.var.http_referer,"%d+.%d+.%d+.%d+:%d+")
-            end
-            index_start,index_end = string.find(ngx.var.query_uri,ngx.var.upstreamhost)
-            if index_end ~= nil then
-                tmp_uri = string.sub(ngx.var.query_uri,index_end+1)
-                ngx.var.query_uri = tmp_uri
-            end
-        }
-        proxy_pass http://$upstreamhost/debug/pprof/$query_uri;
+    set $query_uri "";
+    if ($request_uri ~* "/debug/pprof/(.*)") {
+        set $query_uri $1;
     }
+    set $upstreamhost "";
+    rewrite_by_lua_block {
+        ngx.var.upstreamhost = string.match(ngx.var.query_uri,"%d+.%d+.%d+.%d+:%d+")
+        if ngx.var.upstreamhost == nil then
+            ngx.var.upstreamhost = string.match(ngx.var.http_referer,"%d+.%d+.%d+.%d+:%d+")
+        end
+        index_start,index_end = string.find(ngx.var.query_uri,ngx.var.upstreamhost)
+        if index_end ~= nil then
+            tmp_uri = string.sub(ngx.var.query_uri,index_end+1)
+            ngx.var.query_uri = tmp_uri
+        end
+    }
+    proxy_pass http://$upstreamhost/debug/pprof/$query_uri;
+}
 ```
 
 这样开发从办公环境访问`http://consul.url/pprof/10.10.10.12:203`就可以对测试、开发环境的go程序进行简单的监控了
 
+**改进: ip全部通过url获取**
+
+有时开发希望通过命令行直接去看某台机器的pprof debug信息，为了方便粘贴浏览器的url，所以希望能把host地址包含进请求url，所以做了如下改进
+
+```nginx
+location /debug/pprof/ {
+    set $query_uri "";
+    if ($request_uri ~* "/debug/pprof/(.*)") {
+        set $query_uri $1;
+    }
+    set $upstreamhost "";
+    rewrite_by_lua_block {
+        ngx.var.upstreamhost = string.match(ngx.var.query_uri,"%d+.%d+.%d+.%d+:%d+")
+        if ngx.var.upstreamhost == nil then
+            ngx.var.upstreamhost = string.match(ngx.var.http_referer,"%d+.%d+.%d+.%d+:%d+")
+        end
+        index_start,index_end = string.find(ngx.var.query_uri,ngx.var.upstreamhost)
+        if index_end ~= nil then
+            tmp_uri = string.sub(ngx.var.query_uri,index_end+2)
+            ngx.var.query_uri = tmp_uri
+        end
+        local new_uri = "/debug/pprof/"..ngx.var.upstreamhost.."/"..ngx.var.query_uri
+        --ngx.redirect(new_uri,301)
+        ngx.req.set_uri(new_uri)
+    }
+    proxy_pass http://$upstreamhost/debug/pprof/$query_uri;
+}
+```
+
+这样从`http://consul.url/pprof/10.10.10.12:203`返回的链接查看goroutine信息的时候，浏览器会跳转到`http://consul.url/pprof/10.10.10.12:203/goroutine?debug=1`
+
+
+
+**关于多余代码**
+
+如果set_uri了，那么下面这句代码看似就显得多余了
+
+```nginx
+if ngx.var.upstreamhost == nil then
+    ngx.var.upstreamhost = string.match(ngx.var.http_referer,"%d+.%d+.%d+.%d+:%d+")
+end
+```
+
+但是浏览器有个不好的地方就是会缓存重定向，而且单纯的disable cache不管用，因为之前都是跳到`http://consul.url/pprof/goroutine?debug=1`, 所以即使set_uri, 浏览器仍然不会跳转到新的url，***只有先301重定向破坏它的‘记忆’后才可以正常跳转***，shit~
