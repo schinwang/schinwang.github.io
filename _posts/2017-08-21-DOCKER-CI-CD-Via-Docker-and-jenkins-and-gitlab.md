@@ -10,16 +10,45 @@ author: chason
 ##### 准备条件
 
 1. 使用docker的机器，添加用户时需要指定用户的uid  ： 
-   sudo groupadd -g 500 work && useradd -g 500 -u 500 work   
+     sudo groupadd -g 500 work && useradd -g 500 -u 500 work   
    否则可能出现容器无权限访问挂载数据卷的问题
+
 2. OS  Requirements:
-   [64bit-CentOs 7](https://download.docker.com/linux/centos/docker-ce.repo)
-3. [Docker Installation](https://docs.docker.com/engine/installation/linux/centos/#install-using-the-repository)
-   版本： CE（社区版）
-   安装:    sudo yum install -y yum-utils device-mapper-persistent-data lvm2 &&  sudo yum-config-manager --add-repo [https://download.docker.com/linux/centos/docker-ce.repo](https://download.docker.com/linux/centos/docker-ce.repo) && sudo yum makecache fast && sudo yum -y install docker-ce && sudo systemctl start docker 
-4. 建立用户组（使用work账号管理）
+
+   ```
+   https://download.docker.com/linux/centos/docker-ce.repo
+   ```
+
+     64bit-CentOs 7
+
+3. Docker Installation  (参考<https://docs.docker.com/engine/installation/linux/centos/#install-using-the-repository>）
+     版本： CE（社区版）
+     安装:    sudo yum install -y yum-utils device-mapper-persistent-data lvm2 &&  sudo yum-config-manager --add-repo <https://download.docker.com/linux/centos/docker-ce.repo> && sudo yum makecache fast && sudo yum -y install docker-ce 
+
+4. 编辑**/lib/systemd/system/docker.service** 
+
+   ```shell
+   ExecStart=/usr/bin/dockerd -g /data/lib/docker/
+   ```
+
+5. 建立文件夹，启动docker
+
+   ```shell
+   sudo mkdir -p /data/lib/dockersudo systemctl daemon-reload 
+   sudo systemctl start docker
+   ```
+
+6. 建立用户组（使用work账号管理）
+
+    ```shell
    sudo groupadd docker  ; sudo usermod -aG docker work
-5. sed -i   's/net.ipv4.ip_forward = 0/net.ipv4.ip_forward = 1/g'  /etc/sysctl.conf  && sysctl -p
+    ```
+
+7. 开启host的网络转发
+
+   ```shell
+   sed -i   's/net.ipv4.ip_forward = 0/net.ipv4.ip_forward = 1/g'  /etc/sysctl.conf  && sysctl -p
+   ```
 
 ##### Jenkins机器：
 
@@ -139,22 +168,22 @@ verify_remote_cert = on
 
 Dockerfile:
 
-    ```shell
+```dockerfile
 FROM centos:centos6.6
 MAINTAINER chason
 ADD bfrontapi.tar.gz /data/deploy/
 COPY run.sh /data/deploy/bfrontapi/
 RUN groupadd -g 500 work && \
-    useradd -u 500 -g 500 work && \
-    ln -s /data/deploy /opt/deploy && \
-    ln -s /lib64/libpcre.so.0.0.1 /lib64/libpcre.so.1 && \
-    chown work:work /data/deploy/bfrontapi/run.sh && \
-    chmod u+x /data/deploy/bfrontapi/run.sh && \
-    cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+	useradd -u 500 -g 500 work && \
+	ln -s /data/deploy /opt/deploy && \
+	ln -s /lib64/libpcre.so.0.0.1 /lib64/libpcre.so.1 && \
+	chown work:work /data/deploy/bfrontapi/run.sh && \
+	chmod u+x /data/deploy/bfrontapi/run.sh && \
+	cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 USER work
 WORKDIR /data/deploy/bfrontapi/
 VOLUME /data/deploy/bfrontapi/log
-    ```
+```
 
 run.sh
 
