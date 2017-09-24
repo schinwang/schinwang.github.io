@@ -52,7 +52,7 @@ categories: ops
 
 ```shell
 post_fix="\.1"
-if [ $#'' == '2' ]
+if [ ""$# == '2' ]
 then
     post_fix=$2
 fi
