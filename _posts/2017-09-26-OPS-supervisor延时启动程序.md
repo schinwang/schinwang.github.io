@@ -1,7 +1,7 @@
 ---
 bg: "superman.jpg"
 layout: post
-title: "supervisor延时启动程"
+title: "supervisor延时启动程序"
 summary: ""
 tags: ['ops']
 categories: ops
@@ -21,7 +21,7 @@ and then
 $ supervisorctl -c your_config_file reload
 ```
 
-1. you need to use `exec` command, otherwise it will fork a subprogress from `sleep 60 && exec your command` and your progress will look like as the following
+- you need to use `exec` command, otherwise it will fork a subprogress from `sleep 60 && exec your command` and your progress will look like as the following
 
 ```shell
 $ ps -ef|grep urcmd
@@ -31,7 +31,7 @@ work      3872  1818  0 17:36 ?        00:00:00 urcmd
 
 and then when you use `supervisorctl` to stop urApp, you will stop 1818 progress and leave 3872 an orphan progress
 
-2. recommend to change the startsecs to 5 more than the sleep secs, then when you start this app and check the status, it will show you it's starting
+- recommend to change the startsecs to 5 more than the sleep secs, then when you start this app and check the status, it will show you it's starting
 
 ```shell
 $ supervisorctl -c your_config_file status;echo;ps -ef|grep urcmd
@@ -45,4 +45,4 @@ otherapp                       RUNNING   pid 13502, uptime 0:00:65
 
 else if you set the value less than the sleep secs, when you start the app and check the status,you will get a running status, but it's still sleeping cmd before real executing
 
-3. when you change your configuration file, you need to use reload cmd or just restart your supervisord to make it work
+- when you change your configuration file, you need to use reload cmd or just restart your supervisord to make it work
