@@ -1,7 +1,7 @@
 ---
 bg: "elastic_stack.jpeg"
 layout: post
-title: "troubleshooting:'Field data loading is forbidden on [fied]' with es-logstash index template"
+title: "troubleshooting:'Field data loading is forbidden on [field]' with es-logstash index template"
 summary: ""
 tags: ['ELK']
 categories: ELK
@@ -31,7 +31,7 @@ completeRequest@http://kibana.qyvideo.net/bundles/commons.bundle.js:37808:16
 requestLoaded@http://kibana.qyvideo.net/bundles/commons.bundle.js:37749:25
 ```
 
-###**分析**
+### **分析**
 
 这个问题在github [Field data loading is forbidden on [FIELDNAME] #15267](https://github.com/elastic/elasticsearch/issues/15267)被讨论过，引用**[clintongormley](https://github.com/clintongormley) **commented [on 11 Dec 2015](https://github.com/elastic/elasticsearch/issues/15267#issuecomment-163894259)
 
@@ -57,7 +57,7 @@ $curl http://localhost:9200/_mapping
 "uuid":{"type":"string","norms":{"enabled":false},"fielddata":{"format":"disabled"},"fields":{"raw":{"type":"string","index":"not_analyzed","ignore_above":256}}}
 ```
 
-###**原因**
+### **原因**
 
 ​        出现这种问题是因为elasticsearch对logstash有一套默认的模板
 
@@ -67,7 +67,7 @@ $curl http://localhost:9200/_template
 
 通常string type的数据默认是被分词的，
 
-###**解决**
+### **解决**
 
 可以重新编辑一个es-template.json
 
