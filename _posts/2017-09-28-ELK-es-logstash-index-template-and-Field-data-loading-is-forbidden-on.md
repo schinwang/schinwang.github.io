@@ -31,7 +31,7 @@ completeRequest@http://kibana.qyvideo.net/bundles/commons.bundle.js:37808:16
 requestLoaded@http://kibana.qyvideo.net/bundles/commons.bundle.js:37749:25
 ```
 
-**分析**
+###**分析**
 
 这个问题在github [Field data loading is forbidden on [FIELDNAME] #15267](https://github.com/elastic/elasticsearch/issues/15267)被讨论过，引用**[clintongormley](https://github.com/clintongormley) **commented [on 11 Dec 2015](https://github.com/elastic/elasticsearch/issues/15267#issuecomment-163894259)
 
@@ -57,7 +57,7 @@ $curl http://localhost:9200/_mapping
 "uuid":{"type":"string","norms":{"enabled":false},"fielddata":{"format":"disabled"},"fields":{"raw":{"type":"string","index":"not_analyzed","ignore_above":256}}}
 ```
 
-**原因**
+###**原因**
 
 ​        出现这种问题是因为elasticsearch对logstash有一套默认的模板
 
@@ -67,7 +67,7 @@ $curl http://localhost:9200/_template
 
 通常string type的数据默认是被分词的，
 
-**解决**
+###**解决**
 
 可以重新编辑一个es-template.json
 
@@ -241,6 +241,35 @@ curl -XPUT http://localhost:9200/_template/template-name?pretty -d @es-template.
 
 ```shell
 curl http://lcoalhost:9200/_template
+```
+
+### **解决+**
+
+虽然我们更新了默认的index template，但是要注意的是logstash的配置文件中 template_overwrite 不能设置为true（可以注释掉，默认是false）, 否则更新的模板还是有可能被覆盖的
+
+```nginx
+output{
+    elasticsearch{
+        hosts => ["10.19.24.94:9200", "10.19.24.100:9200", "10.19.24.91:9200"]
+        #template_overwrite => true
+        index => "logstash-%{type}-%{+YYYY.MM.dd}"
+    }
+    #stdout{codec => rubydebug}
+}
+```
+
+或者干脆把模板加到配置文件中，保证每次建的index都是自己想要的
+
+```nginx
+output{
+    elasticsearch{
+        hosts => ["10.19.24.94:9200", "10.19.24.100:9200", "10.19.24.91:9200"]
+        template => "/data/deploy/logstash/es-template.json"
+        template_overwrite => true
+        index => "logstash-%{type}-%{+YYYY.MM.dd}"
+    }
+    #stdout{codec => rubydebug}
+}
 ```
 
 
