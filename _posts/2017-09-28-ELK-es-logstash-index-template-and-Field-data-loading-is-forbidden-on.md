@@ -247,7 +247,7 @@ curl http://lcoalhost:9200/_template
 
 虽然我们更新了默认的index template，但是要注意的是logstash的配置文件中 template_overwrite 不能设置为true（可以注释掉，默认是false）, 否则更新的模板还是有可能被覆盖的
 
-```nginx
+```shell
 output{
     elasticsearch{
         hosts => ["10.19.24.94:9200", "10.19.24.100:9200", "10.19.24.91:9200"]
@@ -260,7 +260,7 @@ output{
 
 或者干脆把模板加到配置文件中，保证每次建的index都是自己想要的
 
-```nginx
+```shell
 output{
     elasticsearch{
         hosts => ["10.19.24.94:9200", "10.19.24.100:9200", "10.19.24.91:9200"]
