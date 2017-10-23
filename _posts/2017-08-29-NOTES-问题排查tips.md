@@ -34,7 +34,11 @@ categories: notes
   $awk '{print $7}' access_log|sort|uniq -c
   ```
 
-#### 3 **链式跟踪，顺藤摸瓜**
+#### 3 配置文件总有你需要的信息
+
+找到了应用的目录，也在日志中发现了端倪，但是某个错误提示让你无法继续下去，比如某某参数有问题，或者某某服务 (eg:DB) 连接失败，这种情况去配置文件中看一下吧。依赖服务信息(url/port/service_name) ，配置参数(log_info，listen_port等)一般会在配置文件中统一配置的
+
+#### 4 **链式跟踪，顺藤摸瓜**
 
 很多服务一般都会有trace_id 方便跟踪请求，对某个请求调用链不熟悉的人来说，接入层日志（以nginx为例）是一个很好的切入点
 
@@ -42,7 +46,7 @@ categories: notes
 - upstream一般为LVS/nginx, 这样可以定位到服务模块
 - nginx日志中一般会有trace id用来标识一个请求，这样可以去应用日志查询到具体的问题
 
-#### 4 **反向跟踪，必要时的抓包跟踪**
+#### 5 **反向跟踪，必要时的抓包跟踪**
 
 有时应用日志的报警定位需要找到某个请求具体的来源，
 
@@ -59,10 +63,10 @@ $tcpdump -nn -X dst host ${dst_ip} and dst port ${port} -w request.cap
 
 - 根据获取的src ip，即可反向跟踪问题
 
-#### 5 app抓包利器 Charles
+#### 6 app抓包利器 Charles
 
 现在移动应用流行，好多web服务都会有mobile app，问题排查时，对app的请求与服务端响应分析可以通过Charles代理来实现
 
-#### 6 请求模拟-postman
+#### 7 请求模拟-postman
 
 postman是一个很好的请求模拟器，支持cookie等需要登录操作的请求，是curl的一个升级版 ，交互方式十分友好，在问题复现及修复确认时，可以通过postman来模拟具体的请求
