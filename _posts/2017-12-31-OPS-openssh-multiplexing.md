@@ -91,10 +91,10 @@ ssh-root@47.91.*.*: socket
 $ ssh -O check root@47.91.*.*
 Master running (pid=91057)
 ###停止接受新的会话
-$ ssh -O stop root@47.91.22.89
+$ ssh -O stop root@47.91.*.*
 Stop listening request sent.
 ###退出所有会话
-$ ssh -O exit root@47.91.22.89
+$ ssh -O exit root@47.91.*.*
 Exit request sent.
 ```
 
