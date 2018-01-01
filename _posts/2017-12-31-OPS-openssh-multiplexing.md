@@ -46,16 +46,20 @@ ControlMaster 用来管理是否启用multiplexing，有2个可选参数: auto�
 
 ControlPath 用来指定muliplexing共用socket文件的路径，path支持`~`来表示home目录，也支持TOKENS：%%, %C, %h, %i, %L, %l, %n, %p, %r, and %u. ControlPath应该尽量保证其他用户对socket文件没有写权限
 
-> %%    A literal '%'.
-> %C    Shorthand for %l%h%p%r.
-> %h    The remote hostname.
-> %i    The local user ID.
-> %L    The local hostname.
-> %l    The local hostname, including the domain name.
-> %n    The original remote hostname, as given on the command line.
-> %p    The remote port.
-> %r    The remote username.
-> %u    The local username.
+```shell
+%%    A literal '%'.
+%C    Shorthand for %l%h%p%r.
+%h    The remote hostname.
+%i    The local user ID.
+%L    The local hostname.
+%l    The local hostname, including the domain name.
+%n    The original remote hostname, as given on the command line.
+%p    The remote port.
+%r    The remote username.
+%u    The local username.
+```
+
+
 
 > ControlPersist
 > When used in conjunction with ControlMaster, specifies that the master connection should remain open in the background (waiting for future client connections) after the initial client connection has been closed.  If set to no, then the master connection will not be placed into the background, and will close as soon as the initial client connection is closed.  If set to yes or 0, then the master connection will remain in the background indefinitely (until killed or closed via a mechanism such as the "ssh -O exit").  If set to a time in seconds, or a time in any of the formats documented in sshd_config(5), then the backgrounded master connection will automatically terminate after it has remained idle (with no client connections) for the specified time.
